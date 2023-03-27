@@ -26,5 +26,14 @@ public class JsonDeck{
 
 public class JsonParseDeck : MonoBehaviour
 {
+    [Header("Inscribed")]
+    public TextAsset jsonDeckFile;
+
+    [Header("Dynamic")]
+    public JsonDeck deck;
+
+    void Awake(){
+        deck = JsonUtility.FromJson<JsonDeck>(jsonDeckFile.text);
+    }
     
 }
