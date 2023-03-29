@@ -29,7 +29,9 @@ public class Card : MonoBehaviour
 
         def = JsonParseDeck.GET_CARD_DEF(rank);
 
+        //build the cards from sprites
         AddDecorators();
+        AddPips();
     }
 
     public virtual void SetLocalPos(Vector3 v){
@@ -77,6 +79,24 @@ public class Card : MonoBehaviour
         }
     }
 
+    private void AddPips(){
+        int pipNum = 0;
+        foreach (JsonPip pip in def.pips){
+            _tGO = Instantiate<GameObject>(Deck.SPRITE_PREFAB,transform);
+            _tGO.transform.localPosition = pip.loc;
+            //flip it if necessary
+            if (pip.flip) _tGO.transform.rotation = _flipRot;
+            //set the scale if necessary
+            if (pip.scale != 1 ){
+            _tGO.transform.localScale = Vector3.one * pip.scale;
+                 }
+        }
+        _tGO.name = "pip_"+pipNum++;
+        _tSRend = _tGO.GetComponent<SpriteRenderer>();
+        _tSRend.sprite = CardSpritesSO.SUITS[suit];
+        _tSRend.sortingOrder = 1;
+        pipGOs.Add(_tGO);
+    }
 
 
 
