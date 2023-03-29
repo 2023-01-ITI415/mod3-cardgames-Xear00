@@ -32,6 +32,7 @@ public class Card : MonoBehaviour
         //build the cards from sprites
         AddDecorators();
         AddPips();
+        AddFace();
     }
 
     public virtual void SetLocalPos(Vector3 v){
@@ -98,6 +99,23 @@ public class Card : MonoBehaviour
         pipGOs.Add(_tGO);
     }
 
+    private void AddFace(){
+        if (def.face == "")
+            return;
+    
+        string faceName = def.face + suit;
+        _tSprite = CardSpritesSO.GET_FACE(faceName);
+        if (_tSprite == null){
+            Debug.LogError("Face sprite" + faceName + " not found.");
+            return;
+        }
 
+    _tGO = Instantiate<GameObject>(Deck.SPRITE_PREFAB,transform);
+    _tSRend = _tGO.GetComponent<SpriteRenderer>();
+    _tSRend.sprite = _tSprite;
+    _tSRend.sortingOrder = 1;
+    _tGO.transform.localPosition = Vector3.zero;
+    _tGO.name = faceName;
+    }
 
 }
