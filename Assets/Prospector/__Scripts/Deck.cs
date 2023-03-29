@@ -64,6 +64,7 @@ public class Deck : MonoBehaviour
 
         Card card = go.GetComponent<Card>();
 
+        card.Init(suit, rank, startFaceUp);
         return card;
     }
 
