@@ -51,7 +51,7 @@ public class JsonParseDeck : MonoBehaviour
 
     static public JsonCard GET_CARD_DEF (int rank) {
         if ((rank < 1) || (rank > S.deck.cards.Count)) {
-            Debug.LogWarning("Illegal rank argument: " +rank);
+            Debug.LogWarning("Illegal rank argument: " + rank);
             return null;
         }
         return S.deck.cards[rank - 1];
