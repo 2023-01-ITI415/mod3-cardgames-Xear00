@@ -19,11 +19,12 @@ public class Deck : MonoBehaviour
 
     static public GameObject SPRITE_PREFAB {get; private set;}
     // Start is called before the first frame update
-    void Start()
+   /* void Start()
     {
         InitDeck();
         Shuffle(ref cards);
     }
+   */
 
     public void InitDeck(){
         //static reference for Card class
