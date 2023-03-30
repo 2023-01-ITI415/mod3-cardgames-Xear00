@@ -22,6 +22,7 @@ public class Deck : MonoBehaviour
     void Start()
     {
         InitDeck();
+        Shuffle(ref cards);
     }
 
     public void InitDeck(){
@@ -68,5 +69,20 @@ public class Deck : MonoBehaviour
         return card;
     }
 
-    
+    static public void Shuffle(ref List<Card> refCards)
+    {
+        List<Card> tCards = new List<Card>();
+
+        int ndx;
+
+        while (refCards.Count > 0)
+        {
+            ndx = Random.Range(0, refCards.Count);
+            // add card to temp list
+            tCards.Add(refCards[ndx]);
+            //Remove card from original list
+            refCards.RemoveAt(ndx);
+        }
+        refCards = tCards;
+    }
 }
