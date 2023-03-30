@@ -33,6 +33,8 @@ public class Card : MonoBehaviour
         AddDecorators();
         AddPips();
         AddFace();
+        AddBack();
+        faceUp = startFaceUp;
     }
 
     public virtual void SetLocalPos(Vector3 v){
@@ -83,6 +85,7 @@ public class Card : MonoBehaviour
     private void AddPips(){
         int pipNum = 0;
         foreach (JsonPip pip in def.pips){
+            //Instantiate a GameObject from deck
             _tGO = Instantiate<GameObject>(Deck.SPRITE_PREFAB,transform);
             _tGO.transform.localPosition = pip.loc;
             //flip it if necessary
@@ -116,6 +119,23 @@ public class Card : MonoBehaviour
     _tSRend.sortingOrder = 1;
     _tGO.transform.localPosition = Vector3.zero;
     _tGO.name = faceName;
+    }
+
+    public bool faceUp
+    {
+        get { return (!back.activeSelf); }
+        set { back.SetActive(!value); }
+    }
+
+    private void AddBack()
+    {
+        _tGO = Instantiate<GameObject>(Deck.SPRITE_PREFAB, transform);
+        _tSRend = _tGO.GetComponent<SpriteRenderer>();
+        _tSRend.sprite = CardSpritesSO.BACK;
+        _tGO.transform.localPosition = Vector3.zero;
+        _tSRend.sortingOrder = 2;
+        _tGO.name = "back";
+        back = _tGO;
     }
 
 }
