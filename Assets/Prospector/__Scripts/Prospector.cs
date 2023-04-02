@@ -150,7 +150,20 @@ public class Prospector : MonoBehaviour
         }
     }
 
+    static public void CARD_CLICKED(CardProspector cp){
+        switch (cp.state){
+        case eCardState.target:
+            break;
+        case eCardState.drawpile:
 
+            S.MoveToTarget(S.Draw());
+            S.UpdateDrawPile();
+            break;
+        case eCardState.mine:
+            break;
+
+        }
+    }
 
 
 }

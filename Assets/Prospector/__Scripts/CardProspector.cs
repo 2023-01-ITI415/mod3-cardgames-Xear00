@@ -16,5 +16,10 @@ public class CardProspector : Card
     //stores info pulled from JSON_Layout
     public JsonLayoutSlot layoutSlot;
 
-   
+    override public void OnMouseUpAsButton(){
+        //uncomment the next line to call the base class version of this method
+        //base.OnMouseUpAsButton();
+
+        Prospector.CARD_CLICKED(this);
+    }
 }
