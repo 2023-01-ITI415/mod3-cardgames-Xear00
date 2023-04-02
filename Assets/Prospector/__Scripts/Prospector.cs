@@ -35,6 +35,10 @@ public class Prospector : MonoBehaviour
         drawPile = ConvertCardsToCardProspectors(deck.cards);
 
         LayoutMine();
+
+        //set up inital target card
+        MoveToTarget(Draw());
+        UpdateDrawPile();
     }
 
     List<CardProspector> ConvertCardsToCardProspectors(List<Card> listCard)
@@ -85,9 +89,68 @@ public class Prospector : MonoBehaviour
 
             cp.state = eCardState.mine;
 
+            //set the sorting layer of all SpriteRenderers on the Card
+            cp.SetSpriteSortingLayer(slot.layer);
             mine.Add(cp);
         }
     }
+
+    void MoveToDiscard(CardProspector cp){
+        cp.state = eCardState.discard;
+        discardPile.Add(cp);
+        cp.transform.SetParent(layoutAnchor);
+
+
+        cp.SetLocalPos(new Vector3( 
+            jsonLayout.multiplier.x * jsonLayout.discardPile.x,
+            jsonLayout.multiplier.y * jsonLayout.discardPile.y,
+            0));
+
+        cp.faceUp = true;
+
+        cp.SetSpriteSortingLayer(jsonLayout.discardPile.layer);
+        cp.SetSortingOrder(-200 + (discardPile.Count * 3));
+
+    }
+
+    void MoveToTarget(CardProspector cp) {
+        //if there is currently a target card, move it to discardPile
+        if (target != null) MoveToDiscard(target);
+
+        MoveToDiscard(cp);
+
+        target = cp; //cp is the new target
+        cp.state = eCardState.target;
+
+        cp.SetSpriteSortingLayer("Target");
+        cp.SetSortingOrder(0);
+    }
+
+    void UpdateDrawPile(){
+        CardProspector cp;
+
+        for (int i = 0; i < drawPile.Count; i++){
+            cp = drawPile[i];
+            cp.transform.SetParent(layoutAnchor);
+
+            Vector3 cpPos = new Vector3();
+            cpPos.x = jsonLayout.multiplier.x * jsonLayout.drawPile.x;
+            //add the staggering for the drawpile
+            cpPos.x += jsonLayout.drawPile.xStagger * i;
+            cpPos.y = jsonLayout.multiplier.y * jsonLayout.drawPile.y;
+            cpPos.z = 0.1f * i;
+            cp.SetLocalPos(cpPos);
+
+            cp.faceUp = false;
+
+            cp.state = eCardState.drawpile;
+
+            cp.SetSpriteSortingLayer(jsonLayout.drawPile.layer);
+            cp.SetSortingOrder(-10 * i);
+        }
+    }
+
+
 
 
 }

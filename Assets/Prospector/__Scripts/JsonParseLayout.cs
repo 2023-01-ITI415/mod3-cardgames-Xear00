@@ -44,7 +44,7 @@ public class JsonLayoutSlot : ISerializationCallbackReceiver
 public class JsonLayoutPile
 {
     public int x, y;
-    public string layout;
+    public string layer;
     public float xStagger; //fans cards to the side for the draw pile
 }
 

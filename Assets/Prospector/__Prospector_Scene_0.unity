@@ -276,12 +276,12 @@ MonoBehaviour:
     drawPile:
       x: 0
       y: 0
-      layout: 
+      layer: 
       xStagger: 0
     discardPile:
       x: 0
       y: 0
-      layout: 
+      layer: 
       xStagger: 0
 --- !u!114 &827460517
 MonoBehaviour:
@@ -296,3 +296,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawPile: []
+  discardPile: []
+  mine: []
+  target: {fileID: 0}

@@ -138,4 +138,37 @@ public class Card : MonoBehaviour
         back = _tGO;
     }
 
+    private SpriteRenderer[] spriteRenderers;
+
+    void PopulateSpriteRenderers(){
+        if (spriteRenderers != null) return;
+
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+    }
+
+
+    public void SetSpriteSortingLayer(string layerName){
+        PopulateSpriteRenderers();
+
+        foreach (SpriteRenderer srend in spriteRenderers){
+            srend.sortingLayerName = layerName;
+        }
+    }
+
+    public void SetSortingOrder(int s0rd){
+        PopulateSpriteRenderers();
+
+        foreach (SpriteRenderer srend in spriteRenderers){
+            if (srend.gameObject == this.gameObject){
+                srend.sortingOrder = s0rd;
+            } else if (srend.gameObject.name == "back"){
+                //if it in the back, set it to the highest layer
+                srend.sortingOrder = s0rd + 2;
+            } else{
+                srend.sortingOrder = s0rd + 1;
+            }
+        }
+    }
+
+
 }
