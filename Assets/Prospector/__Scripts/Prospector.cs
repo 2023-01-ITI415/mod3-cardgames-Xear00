@@ -20,6 +20,10 @@ public class Prospector : MonoBehaviour
     private Deck deck;
     private JsonLayout jsonLayout;
 
+
+    // A dictionary to pair mine layout IDs and Cards
+    private Dictionary<int, CardProspector> mineIdToCardDict;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -70,6 +74,8 @@ public class Prospector : MonoBehaviour
 
         CardProspector cp;
 
+        mineIdToCardDict = new Dictionary<int, CardProspector>();
+
         foreach (JsonLayoutSlot slot in jsonLayout.slots)
         {
             cp = Draw();
@@ -92,6 +98,8 @@ public class Prospector : MonoBehaviour
             //set the sorting layer of all SpriteRenderers on the Card
             cp.SetSpriteSortingLayer(slot.layer);
             mine.Add(cp);
+            //add this CardProspector to the MineIDtoCardDict Dictionary
+            mineIdToCardDict.Add(slot.id, cp);
         }
     }
 
@@ -150,6 +158,23 @@ public class Prospector : MonoBehaviour
         }
     }
 
+    public void SetMineFaceUps(){
+        CardProspector coverCP;
+        foreach (CardProspector cp in mine) {
+            bool faceUp =  true; //assume card is face up
+            
+            //iterate through the covering cards by mine layout ID
+            foreach (int coverID in cp.layoutSlot.hiddenBy){
+                coverCP = mineIdToCardDict[coverID];
+                //if the covering card is null or in the mines
+                if (coverCP == null || coverCP.state == eCardState.mine){
+                    faceUp = false;
+                }
+            }
+            cp.faceUp = faceUp; //set the value on the card
+        }
+    }
+
     static public void CARD_CLICKED(CardProspector cp){
         switch (cp.state){
         case eCardState.target:
@@ -169,6 +194,8 @@ public class Prospector : MonoBehaviour
             if (validMatch){
                 S.mine.Remove(cp);
                 S.MoveToTarget(cp);
+
+                S.SetMineFaceUps();
             }
             break;
 
