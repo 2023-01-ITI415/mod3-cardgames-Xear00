@@ -160,9 +160,21 @@ public class Prospector : MonoBehaviour
             S.UpdateDrawPile();
             break;
         case eCardState.mine:
+            bool validMatch = true;
+
+            if (!cp.faceUp) validMatch = false;
+
+            if (!cp.AdjacentTo(S.target)) validMatch = false;
+
+            if (validMatch){
+                S.mine.Remove(cp);
+                S.MoveToTarget(cp);
+            }
             break;
 
         }
+
+
     }
 
 
