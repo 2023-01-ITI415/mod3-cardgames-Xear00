@@ -81,12 +81,13 @@ public class Card : MonoBehaviour
 
         }
     }
-
+    
     private void AddPips(){
         int pipNum = 0;
         foreach (JsonPip pip in def.pips){
             //Instantiate a GameObject from deck
             _tGO = Instantiate<GameObject>(Deck.SPRITE_PREFAB,transform);
+            //set the position that is specified in the XML
             _tGO.transform.localPosition = pip.loc;
             //flip it if necessary
             if (pip.flip) _tGO.transform.rotation = _flipRot;
@@ -94,12 +95,13 @@ public class Card : MonoBehaviour
             if (pip.scale != 1 ){
             _tGO.transform.localScale = Vector3.one * pip.scale;
                  }
+        
+            _tGO.name = "pip_"+pipNum++;
+            _tSRend = _tGO.GetComponent<SpriteRenderer>();
+            _tSRend.sprite = CardSpritesSO.SUITS[suit];
+            _tSRend.sortingOrder = 1;
+            pipGOs.Add(_tGO);
         }
-        _tGO.name = "pip_"+pipNum++;
-        _tSRend = _tGO.GetComponent<SpriteRenderer>();
-        _tSRend.sprite = CardSpritesSO.SUITS[suit];
-        _tSRend.sortingOrder = 1;
-        pipGOs.Add(_tGO);
     }
 
     private void AddFace(){
