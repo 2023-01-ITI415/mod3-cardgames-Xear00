@@ -14,7 +14,7 @@ public class ScoreManager : MonoBehaviour
     static private ScoreManager S;
 
     static public int SCORE_FROM_PREV_ROUND = 0;
-    static public int SOCRE_THIS_ROUND = 0;
+    static public int SCORE_THIS_ROUND = 0;
     static public int HIGH_SCORE = 0;
 
     [Header("Inscribed")]
@@ -39,13 +39,84 @@ public class ScoreManager : MonoBehaviour
         }
 
         score += SCORE_FROM_PREV_ROUND;
-        SOCRE_THIS_ROUND = 0;
+        SCORE_THIS_ROUND = 0;
     
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+
+    static public void TALLY(eScoreEvent evt){
+        S.Tally(evt);
     }
+
+    void Tally (eScoreEvent evt){
+        switch (evt){
+
+        case eScoreEvent.mine:
+            chain++;
+            scoreRun += chain;
+            break;
+
+        case eScoreEvent.draw: //drawing a card
+        case eScoreEvent.gameWin: //winning a round
+        case eScoreEvent.gameLoss: //losing a round
+            chain = 0; //resets score chain
+            score += scoreRun; //add scoreRun to total
+            scoreRun = 0; //reset scoreRun
+            break;
+        }
+
+        string scoreStr = score.ToString("#,##0"); //The 0 is zero 
+            switch (evt) {
+                case eScoreEvent.gameWin:
+                    SCORE_THIS_ROUND = score - SCORE_FROM_PREV_ROUND;
+                    Log($"You won this round! Round Score: {SCORE_THIS_ROUND}");
+
+
+                    SCORE_FROM_PREV_ROUND = score;
+
+                    if (HIGH_SCORE <= score) {
+                        Log($"Game Win. Your new high score was: {scoreStr}");
+                        HIGH_SCORE = score;
+                        PlayerPrefs.SetInt("ProspectorHighScore", score);
+                    }
+                    break;
+
+                case eScoreEvent.gameLoss:
+                    if(HIGH_SCORE <= score){
+                        Log($"Game Over. Your new high score was: {scoreStr}");
+                        HIGH_SCORE = score;
+                        PlayerPrefs.SetInt("ProspectorHighScore", score);
+                    } else {
+                        Log($"Game Over. Your final score was: {scoreStr}");
+                    }
+
+                    SCORE_FROM_PREV_ROUND = 0;
+                    break;
+
+                default:
+                    Log($"score:{scoreStr} scoreRun:{scoreRun} chain:{chain}");
+                    break;
+
+            }
+    }
+
+    void Log(string str)
+    {
+        if (logScoreEvents) Debug.Log(str);
+    }
+
+    void OnDrawGizmos(){
+        if(checkToResetHighScore){
+            checkToResetHighScore = false;
+            PlayerPrefs.SetInt("ProspectorHighScore", 100);
+            Debug.LogWarning("PlayerPrefs.ProspectorHighScore reset to 100!");
+        }
+    
+    }
+
+    static public int CHAIN { get {return S.chain;}}
+    static public int SCORE { get {return S.score;}}
+    static public int SCORE_RUN { get {return S.scoreRun;}}
+
+
 }
